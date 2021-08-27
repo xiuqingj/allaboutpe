@@ -1,0 +1,19 @@
+Run in root, replacing <CERTNAME> with your Master's certname:
+
+Stop the Puppet agent and PXP agent services:
+puppet resource service puppet ensure=stopped
+puppet resource service pxp-agent ensure=stopped             
+
+Back up the /etc/puppetlabs/puppet/ssl/ directory: cp -a /etc/puppetlabs/puppet/ssl/ /etc/puppetlabs/puppet/ssl_bak/
+
+Remove the cached catalog: rm -f /opt/puppetlabs/puppet/cache/client_data/catalog/<CERTNAME>.json
+
+Revoke the master certificate: puppetserver ca clean --certname <CERTNAME> 
+
+Delete the master certificates: find /etc/puppetlabs/puppet/ssl -name $(puppet config print certname).pem -delete
+
+Stop the Puppet Server service: puppet resource service pe-puppetserver ensure=stopped
+
+Rebuild certificates: puppet infrastructure configure --no-recover
+
+Run Puppet: puppet agent -t
