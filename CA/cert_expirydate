@@ -1,0 +1,4 @@
+/opt/puppetlabs/puppet/bin/openssl x509 -in $(puppet config print cacert) -noout -enddate
+/opt/puppetlabs/puppet/bin/openssl crl -in $(puppet config print cacrl) -noout -nextupdate
+/opt/puppetlabs/puppet/bin/openssl x509 -in $(puppet config print localcacert) -noout -enddate
+/opt/puppetlabs/puppet/bin/openssl x509 -in "$(puppet config print hostcert)" -enddate -noout
