@@ -1,0 +1,32 @@
+If PuppetDB is not running or cannot be reached, Puppet agent runs will encounter a 500 error:
+
+    # puppet agent -t
+    Info: Using configured environment 'production'
+    Info: Retrieving pluginfacts
+    Info: Retrieving plugin
+    Info: Loading facts
+    Error: Could not retrieve catalog from remote server: Error 500 on SERVER: Server Error: Failed to execute '/pdb/cmd/v1?checksum=7c2f9eabbba1bbfd8de78b0f0ac5a2d401104d58&version=5&certname=pe-201722-master.puppetdebug.vlan&command=replace_facts&producer-time
+stamp=1500568375' on at least 1 of the following 'server_urls': https://pe-201722-master.puppetdebug.vlan:8081
+    Warning: Not using cache on failed catalog
+    Error: Could not retrieve catalog; skipping run
+
+Solution: restart the pdb 
+puppet resource service pe-puppetdb ensure=stopped
+puppet resource service pe-puppetdb ensure=running
+
+If see Error: Failed to initialize SSL: The certificate 'CN=pemaster.local' has expired, verify time is synchronized, meaning the old cert is still around. 
+Remove it : find /etc/puppetlabs/puppet/ssl -name "$(puppet config print certname).pem -delete
+
+If see: Failed to open TCP connection to puppet:8140 (Connection refused - connect(2) for "puppet" port 8140)
+Error: No more routes to ca
+Error: Could not run: No more routes to ca
+
+Check puppet.conf under [agent] session.
+
+Last resort to regen primary server certificate:
+
+puppet resource service pe-puppetdb ensure=stopped
+puppet infrastructure configure --no-recover
+puppet infra status
+puppet agent -t
+
