@@ -17,3 +17,15 @@ Stop the Puppet Server service: puppet resource service pe-puppetserver ensure=s
 Rebuild certificates: puppet infrastructure configure --no-recover
 
 Run Puppet: puppet agent -t
+
+When regen failed:
+
+cp -a /etc/puppetlabs/puppet/ssl/ /etc/puppetlabs/puppet/ssl_backup
+
+Manually clean up any certs or keys for the primary:
+find /etc/puppetlabs/puppet/ssl/ -name "$(puppet config print certname).pem" -delete
+
+Follow by running the below command:
+
+puppet infrastructure configure --no-recover --dns_alt_names="puppet","puppet6-xxxxx"
+Run puppet agent -t
