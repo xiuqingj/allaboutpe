@@ -1,0 +1,15 @@
+(1). Backup /etc/puppetlabs/puppet/ssl/ directory
+
+(2). Copy-paste the content https://github.com/puppetlabs/ca_extend/blob/master/files/extend.sh and execute the extend.sh on the primary master. This will generate a new cert with formatting ca_crt-expireXXXX in ca folder.
+
+(3). Open the generated file, copy the base64 part - contents starting from BEGIN CERTIFICATE to END CERTIFICATE and save it into a new file, for example, ca_crt_encoded.pem. Verify that the cert is valid with new expiry date:
+
+openssl x509 -in ca_crt_encoded.pem -noout -text
+
+(4). Copy the file to replace the following two old ca files:
+/etc/puppetlabs/puppet/ssl/ca/ca_crt.pem
+/etc/puppetlabs/puppet/ssl/certs/ca.pem
+
+(5). Run puppet agent -t on the master
+
+(6). Distribute the new ca.pem to agents by removing the old ca.pem file from the above certs folder.
