@@ -1,0 +1,27 @@
+
+Manual way to convert compiler:
+(1) Update csr_attribultes.yaml on the compiler:
+
+/etc/puppetlabs/puppet/csr_attributes.yaml
+By adding a needed extension:
+
+---
+extension_requests:
+  pp_auth_role: pe_compiler
+
+(2) Disable puppet agent: puppet agent --disable
+
+(3) Remove SSL directory:
+rm -rf /etc/puppetlabs/puppet/ssl
+
+(4) Clean the cert from MoM:
+
+puppetserver ca clean --certname <compiler cert>
+(5) Enable agent on compiler and run puppet agent
+
+(6) Sign the cert:
+puppetserver ca sign --certname <compiler cert>
+
+(7) Run puppet agent -t at least twice on compiler. Then run puppet agent -t on primary server and replica.
+
+(8) Confirm pe-puppetdb service has been installed. puppet infra status shows the converted compiler status successfully. Checked some other places like puppetdb.conf, database.ini to confirm it is configured as expected.
