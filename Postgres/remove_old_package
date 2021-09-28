@@ -1,0 +1,8 @@
+See the usage:
+du -axh --max-depth=4 /opt/puppetlabs | awk '$1 ~/G/'| sort -nr
+
+--Remove old package:
+puppet infrastructure run remove_old_pe_packages pe_version=current
+
+--Remove old Postgresql versions
+puppet infrastructure run remove_old_postgresql_versions

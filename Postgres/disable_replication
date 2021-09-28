@@ -1,0 +1,30 @@
+All the steps are on the primary server:
+
+(1) disable puppet agent temporarily on the Primary Server:
+
+puppet agent --disable
+(2) Edit /opt/puppetlabs/server/data/postgresql/11/data/pg_ident.conf, comment out all the lines with pe-ha-replication-map, you should be able to see 10 lines, examples:
+
+#pe-activity-pe-ha-replication-map puppetmom-replica.platform9.puppet.net pe-ha-replication
+#pe-classifier-pe-ha-replication-map puppetmom-replica.platform9.puppet.net pe-ha-replication
+#pe-inventory-pe-ha-replication-map puppetmom-replica.platform9.puppet.net pe-ha-replication
+#pe-orchestrator-pe-ha-replication-map puppetmom-replica.platform9.puppet.net pe-ha-replication
+#pe-rbac-pe-ha-replication-map puppetmom-replica.platform9.puppet.net pe-ha-replication
+......
+(3) Restart pe-postgresql service:
+
+systemctl restart pe-postgresql
+(4) Drop the replication slots:
+
+SELECT pg_drop_replication_slot(slot_name) FROM pg_replication_slots WHERE slot_name LIKE 'pgl_pe_%';
+CHECKPOINT;
+Confirm there are no errors.
+
+(5) enable puppet agent
+
+puppet agent --enable
+Once done, all the 5 replications should have been cleared. You can use the previous commands to confirm:
+
+su -s /bin/bash pe-postgres -c /opt/puppetlabs/server/bin/psql
+
+SELECT slot_name, pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(),restart_lsn)) AS wal_lag FROM pg_replication_slots;
