@@ -1,0 +1,4 @@
+#Run it on the Primary server
+bolt plan run ca_extend::extend_ca_cert --targets local://$(hostname -f) --run-as root
+#Distribute to agent
+bolt plan run ca_extend::upload_ca_cert cert=<path_to_cert> --targets <TargetSpec>
