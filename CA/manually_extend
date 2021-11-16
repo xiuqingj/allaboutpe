@@ -1,6 +1,7 @@
 Steps are followed:
 
 (1). Backup /etc/puppetlabs/puppet/ssl/ directory
+cp -a /etc/puppetlabs/puppet/ssl/ /etc/puppetlabs/puppet/ssl_backup
 
 (2). Copy-paste the content https://github.com/puppetlabs/ca_extend/blob/master/files/extend.sh and execute the extend.sh on the primary master. This will generate a new cert with formatting ca_crt-expireXXXX in ca folder.
 
