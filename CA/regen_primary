@@ -20,12 +20,15 @@ Run Puppet: puppet agent -t
 
 When regen failed:
 
-cp -a /etc/puppetlabs/puppet/ssl/ /etc/puppetlabs/puppet/ssl_backup
+1) cp -a /etc/puppetlabs/puppet/ssl/ /etc/puppetlabs/puppet/ssl_backup
 
 Manually clean up any certs or keys for the primary:
-find /etc/puppetlabs/puppet/ssl/ -name "$(puppet config print certname).pem" -delete
+2) find /etc/puppetlabs/puppet/ssl/ -name "$(puppet config print certname).pem" -delete
+
+3) systemctl stop pe-puppetserver
+4) systemctl stop pe-puppetdb
 
 Follow by running the below command:
 
-puppet infrastructure configure --no-recover --dns_alt_names="puppet","puppet6-xxxxx"
-Run puppet agent -t
+5) puppet infrastructure configure --no-recover --dns_alt_names="puppet","puppet6-xxxxx" --force
+6) Run puppet agent -t twice
