@@ -1,3 +1,4 @@
+##proven working steps #48139
 systemctl stop pe-puppetserver puppet
 rm $(puppet config print hostcert) $(puppet config print hostprivkey) $(puppet config print hostpubkey) $(puppet config print cadir)/signed/$(puppet config print certname).pem
 puppetserver ca generate --certname <master_fqdn> --subject-alt-names <comma_separated_alt_names> --ca-client
