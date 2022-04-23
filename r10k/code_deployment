@@ -1,0 +1,44 @@
+#set file-sync to info level
+FACTER_level="info" FACTER_service="puppetserver" puppet apply -e "augeas {'toggle logging level': incl => \"/etc/puppetlabs/$::service/logback.xml\", lens => 'Xml.lns', context => \"/files/etc/puppetlabs/$::service/logback.xml/configuration/root/#attribute\", changes => \"set level \'$::level\'\"}~> service {\"pe-$::service\": ensure => running }"
+
+
+#set file-sync to debug level
+FACTER_level="debug" FACTER_service="puppetserver" puppet apply -e "augeas {'toggle logging level': incl => \"/etc/puppetlabs/$::service/logback.xml\", lens => 'Xml.lns', context => \"/files/etc/puppetlabs/$::service/logback.xml/configuration/root/#attribute\", changes => \"set level \'$::level\'\"}~> service {\"pe-$::service\": ensure => running }"
+
+#see how long it took to deploy an environment 
+sudo -H -u pe-puppet bash -c ' time /opt/puppetlabs/puppet/bin/r10k deploy environment dev1 -c /opt/puppetlabs/server/data/code-manager/r10k.yaml -p -v debug2'
+sudo -H -u pe-puppet bash -c ' time /opt/puppetlabs/puppet/bin/r10k deploy environment dev1 -c /opt/puppetlabs/server/data/code-manager/r10k.yaml -p -v debug2 --incremental'
+puppet code deploy dev1 --wait
+
+#Error
+POST https://uklvapapp715.gdc.standardchartered.com:8170/code-manager/v1/deploys -> HTTP 500: {"kind":"puppetlabs.code-manager/timeout-exceeded","msg":"The deploys job failed to resolve before the wait timeout was exceeded.","details":{"timeout":700,"unfinished-deploys":[{"environment":"dev1","id":1,"status":"deploying"}],"unsynced-deploys":[],"errored-deploys":[]}}
+
+https://tickets.puppetlabs.com/browse/PE-33057
+2022-04-23T02:38:35.250Z WARN [clojure-agent-send-off-pool-6393] [o.e.j.i.s.f.ObjectDirectory] Pack file /opt/puppetlabs/server/data/puppetserver/filesync/client/ssl-data.git/objects/pack/pack-f83cdaa92e23e5b07815e663c2dab2697f657067.pack was deleted, removing it from pack list
+java.io.FileNotFoundException: /opt/puppetlabs/server/data/puppetserver/filesync/client/ssl-data.git/objects/pack/pack-f83cdaa92e23e5b07815e663c2dab2697f657067.pack (No such file or directory)
+
+Solution:
+******
+On Primary
+systemctl stop pe-puppetserver
+
+mv /opt/puppetlabs/server/data/puppetserver/filesync/storage/ssl-data.git /opt/puppetlabs/server/data/puppetserver/filesync/storage/ssl-data.git-bak
+mv /opt/puppetlabs/server/data/puppetserver/filesync/storage/ca-data.git /opt/puppetlabs/server/data/puppetserver/filesync/storage/ca-data.git-bak
+mv /opt/puppetlabs/server/data/puppetserver/filesync/storage/confd-data.git /opt/puppetlabs/server/data/puppetserver/filesync/storage/confd-data.git-bak
+
+systemctl start pe-puppetserver
+
+On replica as well
+*********
+/opt/puppetlabs/server/data/puppetserver/filesync/client/ssl-data.git
+/opt/puppetlabs/server/data/puppetserver/filesync/client/ca-data.git
+/opt/puppetlabs/server/data/puppetserver/filesync/client/conf-data.git
+*********
+
+After that deployment started working.
+
+Creates the staging directory
+Populate puppet code
+Commit puppet code
+Synchronize to the live code directory
+Synchronize to the compiler
