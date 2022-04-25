@@ -1,0 +1,24 @@
+#When encounter `Sleeping for 1749 seconds before retrying the request` or `Error 503` do following:
+First, can you follow this KB and attach the output:
+https://support.puppet.com/hc/en-us/articles/215729277
+
+This will determine whether or not you're seeing a thundering herd condition, which can cause performance issues of Primary server.
+
+Next, could you install the puppet metrics module if you haven't already done so:
+https://forge.puppet.com/puppetlabs/puppet_metrics_collector
+
+To activate this module, classify your Master with the puppet_metrics_collector class. This will collect performance metrics from your master and let this run for at least 24 hours so it can collect a decent range of data. After this time, the metrics can be collected by running the support script which can be uploaded to us via Box which I already sent invitation to you .
+
+Please run the following command to get the support script:
+
+/opt/puppetlabs/bin/puppet enterprise support --v3 --ticket 48154
+For the meantime, could you also send me the output of puppet infra tune --estimate from your Master
+
+#Error 503 could be caused by thundering herd condition
+#Could be due to tuning
+#Could be due to large facts
+#Explanation for the errors. After reviewing the logs, I saw there are a lot of Error 503 in the puppetserver log and it clearly stated The number of requests waiting for a JRuby instance has exceeded the limit allowed by the max-queued-requests setting that means the server was very busy to handle the request, and ask the agent to come back later.
+
+Also org.eclipse.jetty.io.EofException: Early EOF messages can happen in cases where the server is getting overloaded/unable to keep up with incoming requests. If the requests take too long, clients might time out on connections. The error messages are written when the server eventually tries to provide a response but the connections are no longer active. So all these messages from the server is telling us that it is overloaded or lack of enough resource to cater for the needs from the agents.
+
+

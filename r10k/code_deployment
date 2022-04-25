@@ -11,7 +11,7 @@ sudo -H -u pe-puppet bash -c ' time /opt/puppetlabs/puppet/bin/r10k deploy envir
 puppet code deploy dev1 --wait
 
 #Error
-POST https://uklvapapp715.gdc.standardchartered.com:8170/code-manager/v1/deploys -> HTTP 500: {"kind":"puppetlabs.code-manager/timeout-exceeded","msg":"The deploys job failed to resolve before the wait timeout was exceeded.","details":{"timeout":700,"unfinished-deploys":[{"environment":"dev1","id":1,"status":"deploying"}],"unsynced-deploys":[],"errored-deploys":[]}}
+POST https://uklvapapp715.gdc:8170/code-manager/v1/deploys -> HTTP 500: {"kind":"puppetlabs.code-manager/timeout-exceeded","msg":"The deploys job failed to resolve before the wait timeout was exceeded.","details":{"timeout":700,"unfinished-deploys":[{"environment":"dev1","id":1,"status":"deploying"}],"unsynced-deploys":[],"errored-deploys":[]}}
 
 https://tickets.puppetlabs.com/browse/PE-33057
 2022-04-23T02:38:35.250Z WARN [clojure-agent-send-off-pool-6393] [o.e.j.i.s.f.ObjectDirectory] Pack file /opt/puppetlabs/server/data/puppetserver/filesync/client/ssl-data.git/objects/pack/pack-f83cdaa92e23e5b07815e663c2dab2697f657067.pack was deleted, removing it from pack list
@@ -42,3 +42,25 @@ Populate puppet code
 Commit puppet code
 Synchronize to the live code directory
 Synchronize to the compiler
+
+2022-04-23T04:12:51.675Z INFO  [deploy-pool-1] [p.c.core] Attempting to deploy :environment 'dev1'...
+2022-04-23T04:12:51.675Z DEBUG [deploy-pool-1] [p.c.core] Invoking shell: /opt/puppetlabs/bin/r10k deploy --config /opt/puppetlabs/server/data/code-manager/r10k.yaml --verbose warn --cachedir /opt/puppetlabs/server/data/code-manager/worker-caches/deploy-pool-1 environment dev1 --modules --incremental
+2022-04-23T04:12:51.782Z DEBUG [qtp1886547047-215] [p.r.core] Processing :post /file-sync/v1/latest-commits
+2022-04-23T04:12:51.839Z DEBUG [qtp1886547047-215] [p.r.core] Processing :post /file-sync/v1/active-commits
+2022-04-23T04:12:52.036Z DEBUG [qtp1886547047-215] [p.r.core] Processing :post /file-sync/v1/latest-commits
+2022-04-23T04:12:52.053Z DEBUG [qtp1886547047-2346] [p.r.core] Processing :post /file-sync/v1/active-commits
+2022-04-23T04:12:53.023Z DEBUG [qtp1886547047-223] [p.r.core] Processing :post /file-sync/v1/latest-commits
+2022-04-23T04:12:53.045Z DEBUG [qtp1886547047-2346] [p.r.core] Processing :post /file-sync/v1/active-commits
+2022-04-23T04:12:53.717Z DEBUG [qtp1886547047-223] [p.r.core] Processing :post /file-sync/v1/latest-commits
+2022-04-23T04:12:53.747Z DEBUG [qtp1886547047-2481] [p.r.core] Processing :post /file-sync/v1/latest-commits
+2022-04-23T04:12:53.757Z DEBUG [ecae4a7f-373e-4df7-bc8d-0b47a9a3d399_QuartzSchedulerThread] [o.q.s.PropertySettingJobFactory] Producing instance of Job 'SCHEDULER_DEFAULT.1afc9c94c570-e023b63e-2777-4d70-92f0-4de3407a804a', class=puppetlabs.trapperkeeper.services.scheduler.job
+2022-04-23T04:12:53.757Z DEBUG [ecae4a7f-373e-4df7-bc8d-0b47a9a3d399_QuartzSchedulerThread] [o.q.c.QuartzSchedulerThread] batch acquisition of 1 triggers
+2022-04-23T04:12:53.757Z DEBUG [ecae4a7f-373e-4df7-bc8d-0b47a9a3d399_Worker-7] [o.q.c.JobRunShell] Calling execute on job SCHEDULER_DEFAULT.1afc9c94c570-e023b63e-2777-4d70-92f0-4de3407a804a
+2022-04-23T04:12:53.758Z DEBUG [ecae4a7f-373e-4df7-bc8d-0b47a9a3d399_QuartzSchedulerThread] [o.q.c.QuartzSchedulerThread] batch acquisition of 1 triggers
+2022-04-23T04:12:53.765Z DEBUG [qtp1886547047-2285] [p.r.core] Processing :post /file-sync/v1/active-commits
+
+Hung deployment:
+2022-04-23T04:09:25.724Z ERROR [qtp1942934262-164] [p.c.app] The deploys job failed to resolve before the wait timeout was exceeded
+
+
+2022-04-23T03:59:12.302Z INFO  [clojure-agent-send-off-pool-373] [p.e.s.f.file-sync-storage-core] Committing the following changes:

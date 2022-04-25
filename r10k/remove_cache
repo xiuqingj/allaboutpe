@@ -1,0 +1,11 @@
+1) delete the git cache directory:
+
+rm -rf /opt/puppetlabs/server/data/code-manager/git/* /opt/puppetlabs/server/data/code-manager/worker-caches/*
+
+2) Manual run of R10k
+
+sudo su - pe-puppet -s /bin/bash -c '/opt/puppetlabs/puppet/bin/r10k deploy environment -c /opt/puppetlabs/server/data/code-manager/r10k.yaml -p -v debug'
+
+3) Deploy the code
+
+puppet code deploy --all --wait
