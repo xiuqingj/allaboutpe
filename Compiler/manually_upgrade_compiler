@@ -1,0 +1,4 @@
+curl -k https://<primary>:8140/packages/current/install.bash | sudo bash
+puppet --version # to confirm that the agent has been upgraded
+puppet agent -t --server_list <primary>
+puppet agent -t --server_list <primary>
