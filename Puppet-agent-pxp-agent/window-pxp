@@ -1,0 +1,3 @@
+* nssm is the framework manages pxp-agent
+* puppet agent restart will cause pxp-agent restart
+

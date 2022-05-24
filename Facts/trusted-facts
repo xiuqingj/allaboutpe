@@ -1,0 +1,2 @@
+* Trusted facts are part of a node's certificate information.
+* In order for agent first run to be in the right environment on server side, console is the only option to classify the node into the desire environment.
