@@ -1,0 +1,11 @@
+- Customer had disk space issue and manually clean up code staging /etc/puppetlabs/code-staging/environments which caused file sync corrupted.
+- update /etc/sysconfig/pe-puppetdb from 2G to 4G
+- do a restart systemctl restart pe-puppetdb and systemctl restart pe-puppetserver
+- pe-puppetserver service still stuck at activating
+- did a reinstall using "yum reinstall pe-puppetserver-2019.8.0.2-1.el7.noarch, but not help
+- did a "puppet infra configure --no-recover" to clear catalog and bring up environment, but not help
+- at this stage, we did a Nuclear Option Alpha 2019.2 to 2019.7, it did clear the corrupted file syn.
+- after it, pe-puppetserver service succesfully up.
+- did a code deploy, but it failed with "path is not a repository: /opt/puppetlabs/server/data/code-manager/git"
+- did rm -rf /opt/puppetlabs/server/data/code-manager/git/*  /opt/puppetlabs/server/data/code-manager/worker-caches/deploy-pool-*
+- after that code deployment successfully went through. Ticket48464

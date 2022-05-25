@@ -1,0 +1,29 @@
+NAME                                        READY   STATUS             RESTARTS   AGE
+cd4pe-5bbcc8478-4hnmr                       1/1     Running            10         3d20h
+cd4pe-5cdf985d45-r478m                      0/1     CrashLoopBackOff   9          29m
+cd4pe-object-store-backup-f5b674bf4-cjmqm   1/1     Running            0          3d
+cd4pe-registry-proxy-6bc74945f-g8hwj        1/1     Running            0          3d
+cd4pe-vault-0                               1/1     Running            4          19d
+cd4pe-vault-server-test                     0/1     Completed          0          19d
+kotsadm-5bb684d8cf-sd688                    1/1     Running            15         289d
+kotsadm-operator-7bcc65bfc5-8kmnc           1/1     Running            15         289d
+kotsadm-postgres-0                          1/1     Running            15         289d
+kurl-proxy-kotsadm-6459cc85-wch8x           1/1     Running            15         289d
+minio-0                                     1/1     Running            0          3d
+postgres-0                                  1/1     Running            0          3d
+query-858675687b-v5tj4                      1/1     Running            2          3d
+query-postgres-0                            1/1     Running            0          3d
+ui-b9c7f5bc8-677gr                          1/1     Running            0          3d
+vault-unseal-74bc8b79cf-jmffq               0/1     CrashLoopBackOff   827        19d
+
+Logs:
+[2022-05-23 01:06:47] Verifying Vault installation...
+[2022-05-23 01:06:49] I0523 01:06:49.883130      16 request.go:665] Waited for 1.099947192s due to client-side throttling, not priority and fairness, request: GET:https://10.96.0.1:443/apis/networking.k8s.io/v1beta1?timeout=32s
+[2022-05-23 01:06:54] Retrieved pods [cd4pe-vault-0]
+[2022-05-23 01:06:56] parse error: Invalid numeric literal at line 1, column 6
+[2022-05-23 01:06:57] Waiting up to 90s for pod [cd4pe-vault-0] to be initialized...done!
+[2022-05-23 01:06:58] Vault status check error - aborting!
+[2022-05-23 01:06:58] Error checking seal status: Get "https://127.0.0.1:8200/v1/sys/seal-status": x509: certificate signed by unknown authority (pos[2022-05-23 01:06:58] to/rsa: verification error" while trying to verify candidate authority certificate "internal-services")
+
+After deleting 2 cd4pe pods, things are working correctly. 
+
