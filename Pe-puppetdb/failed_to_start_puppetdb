@@ -1,0 +1,14 @@
+Error message:
+May 26 13:27:29 sgrtssfdjok71mt puppetdb[24682]: Execution error (PSQLException) at org.postgresql.core.v3.QueryExecutorImpl/receiveErrorResponse (QueryExecutorImpl.java:2532).
+May 26 13:27:29 sgrtssfdjok71mt puppetdb[24682]: FATAL: permission denied for database "pe-puppetdb"
+
+To have pe-puppetdb-read access to pe-puppetdb:
+
+su - pe-postgres -s /bin/bash -c "/opt/puppetlabs/server/bin/psql -d pe-puppetdb"
+
+create role "pe-puppetdb-read" with login;
+
+grant connect on database "pe-puppetdb" to "pe-puppetdb-read";
+
+\l
+

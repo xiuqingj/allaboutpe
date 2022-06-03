@@ -1,0 +1,19 @@
+Compiler:
+
+(1) Edit: /etc/puppetlabs/puppetserver/logback.xml, and locate the following lines (near the bottom of the file):
+    <logger name="puppetlabs.pcp" level="info" additivity="false">
+      <appender-ref ref="PCP"/>
+    </logger>
+Change the level from info to trace.
+(2) Restart the pe-puppetserver service on the compiler(s)
+
+Primary server:
+
+(1) Edit /etc/puppetlabs/orchestration-services/logback.xml file, and locate the following lines (near bottom of the file):
+
+ <logger name="puppetlabs.pcp" level="info" additivity="false">
+      <appender-ref ref="PCP"/>
+    </logger>
+
+Change the level from info to trace.
+(2) Restart the pe-orchestration-services service on the primary server
