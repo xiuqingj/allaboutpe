@@ -1,0 +1,18 @@
+Check the permissions and presence of required certificate files
+#tree /etc/puppetlabs/puppet/ssl/ -pugf > /tmp/ssltree
+
+Check any zero bytes ssl files
+#find /etc/puppetlabs/puppet/ssl/ -type f -size 0
+
+Console certs:
+#/opt/puppetlabs/server/data/console-services/certs/
+
+Orchestration service certs:
+#/etc/puppetlabs/orchestration-services/ssl
+
+ACE certs
+#/etc/puppetlabs/ace-server/ssl/
+
+Restore the cert from puppetdb to postgres
+#cp /etc/puppetlabs/puppetdb/ssl/puppet-master-1.euhpc2.arm.com.private_key.pem
+/opt/puppetlabs/server/data/postgresql/11/data/certs/_local.private_key.pem
