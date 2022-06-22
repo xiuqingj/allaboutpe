@@ -1,0 +1,26 @@
+Classifier: Error, checked via https://primaryserver:4433/status/v1/services
+RBAC: Error, checked via https://primaryserver:4433/status/v1/services
+Orchestrator: Error
+
+Output from "puppet infra status" will see those errors, they are associated with "pe-console" service.
+Customer migrated from 2021.3 to 2021.6 and upon reboot, the issue triggered.
+
+2022-06-22T11:41:47.661+10:00 [clojure-agent-send-off-pool-0] ERROR [p.r.s.util] Encountered an error while attempting to initialize the database.
+2022-06-22T11:41:47.662+10:00 [clojure-agent-send-off-pool-0] ERROR [p.j.pool] RBAC Service - An error was encountered during database migration.
+
+The console log clearly said the error was due to RBAC sevice. The LDAP user was not able to migrated. 
+
+2022-06-22T11:41:47.123+10:00 [clojure-agent-send-off-pool-0] INFO  [p.r.s.util] No LDAP found, avoiding migration from old format to new
+2022-06-22T11:41:47.652+10:00 [clojure-agent-send-off-pool-0] INFO  [p.r.s.util] Migrating LDAP password from old encryption to new.
+
+Need to reset the LDAP access from RBAC. Please run through the following steps. On primary server harmony3-p1.anu.edu.au, as root, run the following:
+
+su pe-postgres -c /opt/puppetlabs/server/bin/psql -s /bin/bash
+And at the pe-postgres=# prompt, run the following commands:
+
+\c pe-rbac
+
+DELETE from external_access_config where config_type = "LDAP";
+Once that done, you can type exit and systemctl restart pe-console-services to get everything back up and running.
+
+PE-34037
