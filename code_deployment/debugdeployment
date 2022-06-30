@@ -1,0 +1,29 @@
+# run the following command on your primary server and paste the output in the ticket:
+
+sudo -H -u pe-puppet bash -c  '/opt/puppetlabs/puppet/bin/r10k deploy environment pupp_683 -c /opt/puppetlabs/server/data/code-manager/r10k.yaml -p -v debug2'
+
+sudo -H -u pe-puppet bash -c  '/opt/puppetlabs/puppet/bin/r10k deploy environment <ENVIRONMENT> -c /opt/puppetlabs/server/data/code-manager/r10k.yaml -p -v debug2'
+
+time runuser -u pe-puppet -- r10k deploy environment --config /opt/puppetlabs/server/data/code-manager/r10k.yaml -p pupp_683
+
+Can see the deployment went ok, but just the checkin time is 13 days before.  
+ "pupp_683": {
+                    "latest_commit": {
+                      "commit": "cbe2939d00e275ca73b493afbd62d7cbc4069373",
+                      "date": "2022-06-16T15:24:06Z",
+                      "identity": {
+                        "email": "",
+                        "name": "PE File Sync Service"
+                      },
+                      "message": "code-manager deploy signature: 'e8a0a4830203ce712b1ecec309c69261c354a65e'"
+                    },
+                    "status": "ok"
+                  } 
+
+Could you please try to restart the pe-puppetserver service on Primary server
+
+systemctl stop pe-puppetserver
+systemctl start pe-puppetserver
+and try to do the code deployment again.
+
+ puppet code deploy pupp_683 --wait 
