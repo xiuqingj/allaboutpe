@@ -1,0 +1,64 @@
+need to put public key on the target host
+
+[root@pepup ~]# bolt command run 'uptime' --targets agent-p.puppetdebug.vlan --user root --no-host-key-check
+Started on agent-p.puppetdebug.vlan...
+Finished on agent-p.puppetdebug.vlan:
+   04:37:18 up 85 days,  7:38,  1 user,  load average: 0.00, 0.01, 0.05
+Successful on 1 target: agent-p.puppetdebug.vlan
+Ran on 1 target in 0.25 sec
+
+bolt command run 'free -m' --targets agent-p.puppetdebug.vlan --user root --no-host-key-check
+bolt script run test.sh  --targets agent-p.puppetdebug.vlan --user root --no-host-key-check
+
+Run using inventory.yaml
+[root@pepup ~]# bolt script run test.sh  --targets linux --user root --no-host-key-check
+CLI arguments ["user", "host-key-check"] might be overridden by Inventory: /root/.puppetlabs/bolt/inventory.yaml [ID: cli_overrides]
+Started on agent-p.puppetdebug.vlan...
+Started on agentgrafana-p.puppetdebug.vlan...
+Finished on agent-p.puppetdebug.vlan:
+  today's date is Thu Jun 30 05:58:58 UTC 2022 on host agent-p.puppetdebug.vlan
+Finished on agentgrafana-p.puppetdebug.vlan:
+  today's date is Thu Jun 30 05:58:58 UTC 2022 on host agentgrafana-p.puppetdebug.vlan
+Successful on 2 targets: agent-p.puppetdebug.vlan,agentgrafana-p.puppetdebug.vlan
+Ran on 2 targets in 0.55 sec
+
+[root@pepup ~]# cd .puppetlabs/bolt/
+[root@pepup bolt]# ls
+bolt-debug.log  bolt-defaults.yaml  inventory.yaml
+[root@pepup bolt]# pwd
+/root/.puppetlabs/bolt
+[root@pepup bolt]#
+[root@pepup bolt]#
+[root@pepup bolt]# cat inventory.yaml
+groups:
+  - name: linux
+    targets:
+      - agent-p.puppetdebug.vlan
+      - agentgrafana-p.puppetdebug.vlan
+    config:
+      transport: ssh
+  - name: windows
+    targets:
+      - target3.example.com
+      - target4.example.com
+    config:
+      transport: winrm
+
+
+Script run:
+[root@pepup ~]# bolt script run test.sh  --targets agent-p.puppetdebug.vlan --user root --no-host-key-check
+Started on agent-p.puppetdebug.vlan...
+Finished on agent-p.puppetdebug.vlan:
+  today's date is Thu Jun 30 04:50:03 UTC 2022 on host agent-p.puppetdebug.vlan
+Successful on 1 target: agent-p.puppetdebug.vlan
+Ran on 1 target in 0.5 sec
+[root@pepup ~]# cat test.sh
+#!/bin/sh
+today=`date`
+host_name=`hostname`
+echo "today's date is $today on host $host_name"
+
+windows:
+bolt command run 'get-ciminstance win32_operatingsystem | select-object lastbootuptime' --targets target2 --user Administrator --no-ssl --password-prompt
+
+

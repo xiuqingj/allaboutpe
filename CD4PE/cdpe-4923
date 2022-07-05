@@ -1,0 +1,15 @@
+Pipelines missing from UI
+
+2021-06-18 18:27:44.9 UTC:[DEBUG]:[TASK:0xc29e]:com.puppet.cdpe.deployment.DeploymentTask:[Thread 88] Begin deployment task ID 49822
+2021-06-18 18:27:44.10 UTC:[DEBUG]:[TASK:0xc29e]:com.puppet.pipelines.cdpe.cdpeTaskUtils.DependencyHelper:Thread 88 -> Validating that all dependencies have completed...
+2021-06-18 18:27:49.16 UTC:[DEBUG]:[TASK:0xc29d]:com.puppet.cdpe.deployment.DeploymentTask:Dependency check attempt maxtime exceeded. Thread should yield and try again.
+
+2021-06-21 20:35:39.733 UTC:[DEBUG]:[TASK:0xc29e]:com.puppet.cdpe.deployment.DeploymentTask:Dependency check attempt maxtime exceeded. Thread should yield and try again.
+2021-06-21 20:35:57.732 UTC:[DEBUG]:[TASK:0xc29e]:com.puppet.cdpe.deployment.DeploymentTask:[Thread 97] Begin deployment task ID 49822
+2021-06-21 20:35:57.733 UTC:[DEBUG]:[TASK:0xc29e]:com.puppet.pipelines.cdpe.cdpeTaskUtils.DependencyHelper:Thread 97 -> Validating that all dependencies have completed...
+2021-06-21 20:36:02.741 UTC:[DEBUG]:[TASK:0xdd58]:com.puppet.pipelines.cdpe.PEImpactAnalysisTask:Dependency check attempt maxtime exceeded. Thread should yield and try again.
+
+This issue looks similar to one SCB encountered last year (see CDPE-3871) and an internal one reported in CDPE-3753. A couple of the workarounds that seemed to work in those situations are:
+
+- We use PaC, and to resolve this I flipped between managing pipelines in the UI and back again and the missing pipeline was restored.
+- Push the cd4pe.yaml file again from the codebase & validate the code (Validate under Manage as code). All pipelines are now showing properly.
