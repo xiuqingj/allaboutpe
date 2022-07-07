@@ -29,7 +29,11 @@ bolt-debug.log  bolt-defaults.yaml  inventory.yaml
 /root/.puppetlabs/bolt
 [root@pepup bolt]#
 [root@pepup bolt]#
-[root@pepup bolt]# cat inventory.yaml
+[root@pepup ~]# cat /root/.puppetlabs/bolt/inventory.yaml
+config:
+  ssh:
+    host-key-check: false
+    private-key: ~/.ssh/id_rsa
 groups:
   - name: linux
     targets:
@@ -37,6 +41,9 @@ groups:
       - agentgrafana-p.puppetdebug.vlan
     config:
       transport: ssh
+      ssh:
+       run-as: root
+       user: root
   - name: windows
     targets:
       - target3.example.com
@@ -45,13 +52,17 @@ groups:
       transport: winrm
 
 
-Script run:
-[root@pepup ~]# bolt script run test.sh  --targets agent-p.puppetdebug.vlan --user root --no-host-key-check
+[root@pepup ~]# bolt script run test.sh  --targets linux
 Started on agent-p.puppetdebug.vlan...
+Started on agentgrafana-p.puppetdebug.vlan...
 Finished on agent-p.puppetdebug.vlan:
-  today's date is Thu Jun 30 04:50:03 UTC 2022 on host agent-p.puppetdebug.vlan
-Successful on 1 target: agent-p.puppetdebug.vlan
-Ran on 1 target in 0.5 sec
+  today's date is Thu Jul  7 07:10:26 UTC 2022 on host agent-p.puppetdebug.vlan
+Finished on agentgrafana-p.puppetdebug.vlan:
+  today's date is Thu Jul  7 07:10:26 UTC 2022 on host agentgrafana-p.puppetdebug.vlan
+Successful on 2 targets: agent-p.puppetdebug.vlan,agentgrafana-p.puppetdebug.vlan
+Ran on 2 targets in 0.54 sec
+
+
 [root@pepup ~]# cat test.sh
 #!/bin/sh
 today=`date`
