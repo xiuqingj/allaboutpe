@@ -1,0 +1,16 @@
+Ticket 48996 If there is any hung plan, it will be  taking up all the jruby instances. To release it, restarte pe-orchestration service.
+The phase look for plan can be "Running plan", "Starting: plan", "Finished: plan"
+
+Example logs:
+2022-07-12T10:32:40.935+02:00 INFO  [qtp404010149-558552] [p.o.b.plan-executor] Running plan: profile::patch_report
+2022-07-12T10:32:41.817+02:00 INFO  [pool-6-thread-65] [p.o.jruby] [PlanExecutor::Executor] Starting: plan profile::patch_report
+2022-07-12T10:34:22.005+02:00 INFO  [pool-6-thread-65] [p.o.jruby] [PlanExecutor::Executor] Finished: plan profile::patch_report in 100.19 sec
+2022-07-12T10:34:22.029+02:00 INFO  [pool-6-thread-65] [p.o.b.plan-executor] Finished plan profile::patch_report
+2022-07-12T10:39:40.972+02:00 INFO  [qtp404010149-558335] [p.o.b.plan-executor] Running plan: profile::patch_report
+2022-07-12T10:39:41.592+02:00 INFO  [pool-6-thread-66] [p.o.jruby] [PlanExecutor::Executor] Starting: plan profile::patch_report
+
+You can consider to use plan_jobs endpoint to keep track of plan status especially when you started multiple plans at one go. It helps you to spot if those plans are in a hung state and occupy all the Jrubies.
+https://puppet.com/docs/pe/2021.6/orchestrator_api_plan_jobs_endpoint.html
+
+Usually maximum for "puppet_enterprise::profile::orchestrator::jruby_max_active_instances": 6. 
+

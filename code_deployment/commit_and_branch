@@ -1,0 +1,37 @@
+Issue: After upgrading to 2021.6, code deployment no longer syncs module changes when made within the specified branch in the Puppetfile. Ticket 48551
+
+Upgrade r10k
+Need to have internet access on the primary, just run:
+/opt/puppetlabs/puppet/bin/gem install r10k -v 3.14.2
+
+If not, you can download it from https://rubygems.org/gems/r10k/versions/3.14.2, copy it to the primary, and run:
+/opt/puppetlabs/puppet/bin/gem install --local r10k-3.14.2.gem
+
+If there are issues, the r10k update can be rolled back with the following command.
+/opt/puppetlabs/puppet/bin/gem uninstall r10k -v 3.14.2
+
+After installing the gem, try another code deployment to validate if the issue persists.
+
+If it does, please send the output of a manual r10k deployment with debug2 logging. You can replace production with any environment that you see the issue with.
+
+sudo -H -u pe-puppet bash -c '/opt/puppetlabs/puppet/bin/r10k deploy environment production -c /opt/puppetlabs/server/data/code-manager/r10k.yaml -p -v debug2'
+
+After all these procedures, issue persists.
+
+To confirm r10k version:
+ /opt/puppetlabs/puppet/bin/gem list r10k 
+
+ The Puppetfile uses :commit instead of :branch. Since the :commit is used and the Puppetfile in the control repo has not changed, --incremental flag will not sync it by design.
+
+Change from:
+
+mod 'diaag_imaging_server',
+ :git    => 'git@xxxxxx:dgit/diaag_imaging_server.git',
+ :commit => 'development'
+ 
+to the following solved the issue. 
+
+mod 'diaag_imaging_server',
+ :git    => 'git@xxxxx:dgit/diaag_imaging_server.git',
+ :branch => 'development'
+

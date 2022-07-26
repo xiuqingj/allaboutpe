@@ -2,3 +2,33 @@
 bolt plan run ca_extend::extend_ca_cert --targets local://$(hostname -f) --run-as root
 #Distribute to agent
 bolt plan run ca_extend::upload_ca_cert cert=<path_to_cert> --targets <TargetSpec>
+
+ we have [ca_extend](https://forge.puppet.com/modules/puppetlabs/ca_extend) on the forge that leverage with puppet bolt to extend and distribute `ca.pem` to agent. 
+
+
+Please follow the steps to install bolt and ca_extend, then try to run the Bolt task from the primary server to extend the expiry:
+
+```
+bolt plan run ca_extend::extend_ca_cert --targets local://$(hostname -f) --run-as root
+```
+
+After the CA certificate has been extended, there are three methods for distributing it to agents:
+
+
+
+After the CA certificate has been extended, there are three methods for distributing it to agents:
+Using the ca_extend::upload_ca_cert plan or another method to copy the CA certificate to agents.
+Manually deleting ca.pem on agents and letting them download that file as part of the next Puppet agent run. The agent will download that file only if it is absent, so it must be deleted to use this method.
+Using a Puppet file resource to manage ca.pem. Note: This method is only possible if the CA certificate has not yet expired because Puppet communications depend upon a valid CA certificate.
+
+class extend_ca_agent {
+  $localcacert = $facts['os']['family'] ? {
+    'windows' => 'C:\ProgramData\PuppetLabs\puppet\etc\ssl\certs\ca.pem',
+    default   => '/etc/puppetlabs/puppet/ssl/certs/ca.pem'
+  }
+
+  file { $localcacert:
+    ensure  => file,
+    content => file('/etc/puppetlabs/puppet/ssl/certs/ca.pem'),
+  }
+}

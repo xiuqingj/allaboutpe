@@ -1,0 +1,6 @@
+Ticket 48983 - security update for centos is not working due to updateinfo.xml in the CentOS repositories do not include classifications for security patches.
+
+Command that check for security updates:
+SECPKGS=$(yum -q --security check-update 2>/dev/null | egrep -v "^Security:|is broken|^Loaded plugins|^You should report|^To help pinpoint" | awk '/^[[:alnum:]]/ {print $1}')
+SECPKGS=$(echo $SECPKGS | sed 's/Obsoleting.*//')
+

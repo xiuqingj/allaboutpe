@@ -1,0 +1,32 @@
+[root@pepup ~]# facter augeas
+{
+  version => "1.12.0"
+}
+
+Puppet's augeas ship with external party's augeas which from hercules-team.
+
+https://github.com/hercules-team/augeas/releases/tag/release-1.13.0
+
+Module "augeas_core" on the forge ships the augeas type and provider. The lenses are actually packed into the puppet-agent build.
+
+To test for augeas:
+
+class augeas { 'configure_sshd':
+  context => '/files/tmp/sshd_config',
+  lens    => 'Sshd.lns',
+  incl    => '/tmp/sshd_config',
+  changes => [
+    'set HostKeyAlgorithms/1 ssh-ed25519',
+    'set HostKeyAlgorithms/2 xxx-ed25519',
+    'set HostKeyAlgorithms/3 yyy-ed25519',
+  ],
+}
+[root@pepup augeas]# cat /tmp/sshd_config
+AcceptEnv LANG LC_*
+ChallengeResponseAuthentication no
+LoginGraceTime 60
+PasswordAuthentication yes
+PermitRootLogin no
+HostKeyAlgorithms ssh-ed25519,xxx-ed25519,yyy-ed25519
+
+- MODULES-7526 and ticket 40610 to understand more about augeas. 
